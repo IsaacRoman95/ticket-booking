@@ -6,11 +6,19 @@ import {
   Delete,
   Param,
   Body,
+  UseInterceptors,
 } from '@nestjs/common';
 import { SeatService } from './seat.service';
 import { Seat } from '../entities/seat.entity';
+import { JsonApiInterceptor } from 'src/interceptors/json-api.interceptor';
 
 @Controller('seats')
+@UseInterceptors(
+  new JsonApiInterceptor('route', {
+    attributes: ['seatNumber', 'created_at', 'updated_at'],
+    keyForAttribute: 'camelCase',
+  }),
+)
 export class SeatController {
   constructor(private readonly seatService: SeatService) {}
 
