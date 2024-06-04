@@ -14,7 +14,7 @@ import { JsonApiInterceptor } from 'src/interceptors/json-api.interceptor';
 
 @Controller('seats')
 @UseInterceptors(
-  new JsonApiInterceptor('route', {
+  new JsonApiInterceptor('seat', {
     attributes: ['seatNumber', 'created_at', 'updated_at'],
     keyForAttribute: 'camelCase',
   }),

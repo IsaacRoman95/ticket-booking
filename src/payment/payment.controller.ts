@@ -6,11 +6,19 @@ import {
   Delete,
   Param,
   Body,
+  UseInterceptors,
 } from '@nestjs/common';
 import { PaymentService } from './payment.service';
 import { Payment } from '../entities/payment.entity';
+import { JsonApiInterceptor } from 'src/interceptors/json-api.interceptor';
 
 @Controller('payments')
+@UseInterceptors(
+  new JsonApiInterceptor('payment', {
+    attributes: ['amount', 'paymentDate', 'created_at', 'updated_at'],
+    keyForAttribute: 'camelCase',
+  }),
+)
 export class PaymentController {
   constructor(private readonly paymentService: PaymentService) {}
 

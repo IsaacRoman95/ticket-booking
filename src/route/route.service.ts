@@ -11,8 +11,11 @@ export class RouteService {
     private routeRepository: Repository<Route>,
   ) {}
 
-  findAll(): Promise<Route[]> {
-    return this.routeRepository.find();
+  findAll(query: any): Promise<Route[]> {
+    const { origin, destination, travelDate } = query;
+    return this.routeRepository.find({
+      where: { origin, destination, travelDate },
+    });
   }
 
   findOne(id: number): Promise<Route> {
