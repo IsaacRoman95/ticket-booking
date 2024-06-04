@@ -1,4 +1,3 @@
-// src/app.module.ts
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Route } from './entities/route.entity';
@@ -11,6 +10,7 @@ import { TicketModule } from './ticket/ticket.module';
 import { SeatModule } from './seat/seat.module';
 import { LuggageModule } from './luggage/luggage.module';
 import { PaymentModule } from './payment/payment.module';
+import { jsonApiProvider } from './providers/json-api-provider';
 
 @Module({
   imports: [
@@ -30,5 +30,6 @@ import { PaymentModule } from './payment/payment.module';
     LuggageModule,
     PaymentModule,
   ],
+  providers: [jsonApiProvider],
 })
 export class AppModule {}
