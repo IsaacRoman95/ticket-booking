@@ -13,7 +13,7 @@ export class Luggage {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ManyToOne(() => Ticket, (ticket) => ticket.luggages)
+  @ManyToOne(() => Ticket, (ticket) => ticket.luggages, { eager: true })
   ticket: Ticket;
 
   @Column({ type: 'decimal', precision: 5, scale: 2 })
