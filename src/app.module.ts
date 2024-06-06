@@ -1,16 +1,15 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Route } from './entities/route.entity';
-import { Ticket } from './entities/ticket.entity';
-import { Seat } from './entities/seat.entity';
-import { Luggage } from './entities/luggage.entity';
-import { Payment } from './entities/payment.entity';
 import { RouteModule } from './route/route.module';
 import { TicketModule } from './ticket/ticket.module';
 import { SeatModule } from './seat/seat.module';
 import { LuggageModule } from './luggage/luggage.module';
 import { PaymentModule } from './payment/payment.module';
-import { jsonApiProvider } from './providers/json-api-provider';
+import { Route } from './entities/route.entity';
+import { Ticket } from './entities/ticket.entity';
+import { Seat } from './entities/seat.entity';
+import { Luggage } from './entities/luggage.entity';
+import { Payment } from './entities/payment.entity';
 
 @Module({
   imports: [
@@ -30,6 +29,5 @@ import { jsonApiProvider } from './providers/json-api-provider';
     LuggageModule,
     PaymentModule,
   ],
-  providers: [jsonApiProvider],
 })
 export class AppModule {}

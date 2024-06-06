@@ -40,7 +40,7 @@ describe('RouteService', () => {
       jest.spyOn(repository, 'find').mockResolvedValue([route]);
 
       // Ejecutamos el método 'findAll' y esperamos que devuelva un array con nuestro objeto Route
-      const result = await service.findAll();
+      const result = await service.findAll(null);
 
       expect(result).toEqual([route]);
     });

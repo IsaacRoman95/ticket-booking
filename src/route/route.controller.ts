@@ -7,6 +7,7 @@ import {
   Put,
   Delete,
   UseInterceptors,
+  Query,
 } from '@nestjs/common';
 import { RouteService } from './route.service';
 import { Route } from '../entities/route.entity';
@@ -29,8 +30,8 @@ export class RouteController {
   constructor(private readonly routeService: RouteService) {}
 
   @Get()
-  findAll() {
-    return this.routeService.findAll();
+  findAll(@Query() query: any) {
+    return this.routeService.findAll(query); 
   }
 
   @Get(':id')
