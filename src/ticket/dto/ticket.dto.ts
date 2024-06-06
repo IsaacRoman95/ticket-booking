@@ -1,7 +1,26 @@
+import { IsString, IsBoolean, IsNumber, IsOptional } from 'class-validator';
+
 export class CreateTicketDto {
+  @IsNumber()
   routeId: number;
-  seatNumbers: string[];
-  totalAmount: number;
-  paymentDate: Date;
-  luggageIds: number[];
+
+  @IsString()
+  seatNumber: string;
+
+  @IsBoolean()
+  luggage: boolean;
+}
+
+export class UpdateTicketDto {
+  @IsOptional()
+  @IsNumber()
+  routeId?: number;
+
+  @IsOptional()
+  @IsString()
+  seatNumber?: string;
+
+  @IsOptional()
+  @IsBoolean()
+  luggage?: boolean;
 }

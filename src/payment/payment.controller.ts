@@ -11,6 +11,7 @@ import {
 import { PaymentService } from './payment.service';
 import { Payment } from '../entities/payment.entity';
 import { JsonApiInterceptor } from 'src/interceptors/json-api.interceptor';
+import { CreatePaymentDto, UpdatePaymentDto } from './dto/payment.dto';
 
 @Controller('payments')
 @UseInterceptors(
@@ -33,13 +34,16 @@ export class PaymentController {
   }
 
   @Post()
-  create(@Body() payment: Payment): Promise<Payment> {
-    return this.paymentService.create(payment);
+  create(@Body() createPaymentDto: CreatePaymentDto): Promise<Payment> {
+    return this.paymentService.create(createPaymentDto);
   }
 
   @Put(':id')
-  update(@Param('id') id: number, @Body() payment: Payment): Promise<Payment> {
-    return this.paymentService.update(id, payment);
+  update(
+    @Param('id') id: number,
+    @Body() updatePaymentDto: UpdatePaymentDto,
+  ): Promise<Payment> {
+    return this.paymentService.update(id, updatePaymentDto);
   }
 
   @Delete(':id')

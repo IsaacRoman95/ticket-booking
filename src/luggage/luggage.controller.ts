@@ -7,16 +7,17 @@ import {
   Put,
   Delete,
   UseInterceptors,
+  HttpCode,
+  HttpStatus,
 } from '@nestjs/common';
 import { LuggageService } from './luggage.service';
-import { CreateLuggageDto } from './dto/luggage.dto';
-import { Luggage } from '../entities/luggage.entity';
+import { CreateLuggageDto, UpdateLuggageDto } from './dto/luggage.dto';
 import { JsonApiInterceptor } from 'src/interceptors/json-api.interceptor';
 
 @Controller('luggages')
 @UseInterceptors(
   new JsonApiInterceptor('luggage', {
-    attributes: ['weight', 'description', 'createdAt', 'updatedAt', 'ticket'],
+    attributes: ['weight', 'description', 'created_at', 'updated_at', 'ticket'],
     keyForAttribute: 'camelCase',
     ticket: {
       ref: 'id',
@@ -24,8 +25,8 @@ import { JsonApiInterceptor } from 'src/interceptors/json-api.interceptor';
         'origin',
         'destination',
         'travelDate',
-        'createdAt',
-        'updatedAt',
+        'created_at',
+        'updated_at',
       ],
     },
   }),
@@ -34,27 +35,31 @@ export class LuggageController {
   constructor(private readonly luggageService: LuggageService) {}
 
   @Get()
-  findAll() {
+  async findAll() {
     return this.luggageService.findAll();
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
+  async findOne(@Param('id') id: string) {
     return this.luggageService.findOne(+id);
   }
 
   @Post()
-  create(@Body() createLuggageDto: CreateLuggageDto) {
+  @HttpCode(HttpStatus.CREATED)
+  async create(@Body() createLuggageDto: CreateLuggageDto) {
     return this.luggageService.create(createLuggageDto);
   }
 
   @Put(':id')
-  update(@Param('id') id: string, @Body() updateLuggageDto: Luggage) {
+  async update(
+    @Param('id') id: string,
+    @Body() updateLuggageDto: UpdateLuggageDto,
+  ) {
     return this.luggageService.update(+id, updateLuggageDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
+  async remove(@Param('id') id: string) {
     return this.luggageService.remove(+id);
   }
 }

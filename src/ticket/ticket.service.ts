@@ -1,9 +1,8 @@
-// src/ticket/ticket.service.ts
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Ticket } from '../entities/ticket.entity';
-import { CreateTicketDto } from './dto/ticket.dto';
+import { CreateTicketDto, UpdateTicketDto } from './dto/ticket.dto';
 
 @Injectable()
 export class TicketService {
@@ -16,41 +15,35 @@ export class TicketService {
     return this.ticketRepository.find();
   }
 
-  findOne(id: number): Promise<Ticket> {
-    return this.ticketRepository.findOne({ where: { id } });
+  async findOne(id: number): Promise<Ticket> {
+    const ticket = await this.ticketRepository.findOne({ where: { id } });
+    if (!ticket) {
+      throw new NotFoundException('Ticket not found');
+    }
+    return ticket;
   }
 
-  create(ticket: Ticket): Promise<Ticket> {
+  async create(createTicketDto: CreateTicketDto): Promise<Ticket> {
+    const ticket = this.ticketRepository.create(createTicketDto);
     return this.ticketRepository.save(ticket);
   }
 
-  async createTickets(ticketDto: CreateTicketDto): Promise<Ticket[]> {
-    const { routeId, seatNumbers, totalAmount, paymentDate, luggageIds } =
-      ticketDto;
-
-    const tickets: Ticket[] = [];
-
-    for (const seatNumber of seatNumbers) {
-      const ticket = new Ticket();
-      ticket. = routeId;
-      ticket.seatNumber = seatNumber;
-      ticket. = totalAmount;
-      ticket.paymentDate = paymentDate;
-      ticket.luggageIds = luggageIds;
-
-      const savedTicket = await this.ticketRepository.save(ticket);
-      tickets.push(savedTicket);
+  async update(id: number, updateTicketDto: UpdateTicketDto): Promise<Ticket> {
+    const ticket = await this.ticketRepository.findOne({ where: { id } });
+    if (!ticket) {
+      throw new NotFoundException('Ticket not found');
     }
 
-    return tickets;
-  }
-
-  async update(id: number, ticket: Ticket): Promise<Ticket> {
-    await this.ticketRepository.update(id, ticket);
-    return this.findOne(id);
+    const updatedTicket = { ...ticket, ...updateTicketDto };
+    return this.ticketRepository.save(updatedTicket);
   }
 
   async remove(id: number): Promise<void> {
-    await this.ticketRepository.delete(id);
+    const ticket = await this.ticketRepository.findOne({ where: { id } });
+    if (!ticket) {
+      throw new NotFoundException('Ticket not found');
+    }
+
+    await this.ticketRepository.remove(ticket);
   }
 }

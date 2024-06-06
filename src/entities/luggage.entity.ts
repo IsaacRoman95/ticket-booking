@@ -5,8 +5,10 @@ import {
   ManyToOne,
   CreateDateColumn,
   UpdateDateColumn,
+  Index,
 } from 'typeorm';
 import { Ticket } from './ticket.entity';
+import { IsDecimal, IsOptional, IsString } from 'class-validator';
 
 @Entity()
 export class Luggage {
@@ -17,9 +19,12 @@ export class Luggage {
   ticket: Ticket;
 
   @Column({ type: 'decimal', precision: 5, scale: 2 })
+  @IsDecimal({ decimal_digits: '2' })
   weight: number;
 
   @Column({ nullable: true })
+  @IsOptional()
+  @IsString()
   description: string;
 
   @CreateDateColumn()

@@ -1,21 +1,28 @@
 import {
   Controller,
   Get,
+  Param,
   Post,
+  Body,
   Put,
   Delete,
-  Param,
-  Body,
   UseInterceptors,
 } from '@nestjs/common';
 import { TicketService } from './ticket.service';
+import { CreateTicketDto, UpdateTicketDto } from './dto/ticket.dto';
 import { Ticket } from '../entities/ticket.entity';
 import { JsonApiInterceptor } from 'src/interceptors/json-api.interceptor';
 
 @Controller('tickets')
 @UseInterceptors(
   new JsonApiInterceptor('ticket', {
-    attributes: ['seatNumber', 'luggage', 'created_at', 'updated_at'],
+    attributes: [
+      'seatNumber',
+      'lunggage',
+      'created_at',
+      'updated_at',
+      'routeId',
+    ],
     keyForAttribute: 'camelCase',
   }),
 )
@@ -23,27 +30,30 @@ export class TicketController {
   constructor(private readonly ticketService: TicketService) {}
 
   @Get()
-  findAll(): Promise<Ticket[]> {
+  async findAll(): Promise<Ticket[]> {
     return this.ticketService.findAll();
   }
 
   @Get(':id')
-  findOne(@Param('id') id: number): Promise<Ticket> {
-    return this.ticketService.findOne(id);
+  async findOne(@Param('id') id: string): Promise<Ticket> {
+    return this.ticketService.findOne(+id);
   }
 
   @Post()
-  create(@Body() ticket: Ticket): Promise<Ticket> {
-    return this.ticketService.create(ticket);
+  async create(@Body() createTicketDto: CreateTicketDto): Promise<Ticket> {
+    return this.ticketService.create(createTicketDto);
   }
 
   @Put(':id')
-  update(@Param('id') id: number, @Body() ticket: Ticket): Promise<Ticket> {
-    return this.ticketService.update(id, ticket);
+  async update(
+    @Param('id') id: string,
+    @Body() updateTicketDto: UpdateTicketDto,
+  ): Promise<Ticket> {
+    return this.ticketService.update(+id, updateTicketDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: number): Promise<void> {
-    return this.ticketService.remove(id);
+  async remove(@Param('id') id: string): Promise<void> {
+    return this.ticketService.remove(+id);
   }
 }

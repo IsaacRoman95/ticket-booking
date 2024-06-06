@@ -5,8 +5,10 @@ import {
   OneToMany,
   CreateDateColumn,
   UpdateDateColumn,
+  Index,
 } from 'typeorm';
 import { Ticket } from './ticket.entity';
+import { IsString, IsDate } from 'class-validator';
 
 @Entity()
 export class Route {
@@ -14,12 +16,15 @@ export class Route {
   id: number;
 
   @Column()
+  @IsString()
   origin: string;
 
   @Column()
+  @IsString()
   destination: string;
 
   @Column()
+  @IsDate()
   travelDate: Date;
 
   @OneToMany(() => Ticket, (ticket) => ticket.route)
