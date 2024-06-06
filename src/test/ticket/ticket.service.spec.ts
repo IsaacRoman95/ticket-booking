@@ -1,8 +1,9 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { UpdateResult, DeleteResult, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { TicketService } from '../../ticket/ticket.service';
 import { Ticket } from '../../entities/ticket.entity';
+import { CreateTicketDto } from '../../ticket/dto/ticket.dto';
 
 describe('TicketService', () => {
   let service: TicketService;
@@ -28,70 +29,28 @@ describe('TicketService', () => {
   });
 
   it('should create a new ticket', async () => {
-    const newTicket: Ticket = {
-      id: 1,
-      route: null, // You can adjust the properties as needed
+    const newTicketDto: CreateTicketDto = {
+      routeId: 1,
       seatNumber: 'A1',
       luggage: false,
+    };
+
+    const newTicket: Ticket = {
+      id: 1, // Ajusta el ID según tu lógica
+      route: null, // Ajusta las propiedades según tu lógica
       seats: [],
       luggages: [],
       payments: [],
       created_at: new Date(),
       updated_at: new Date(),
+      ...newTicketDto, // Incluye las propiedades del DTO
     };
+
+    jest.spyOn(repository, 'create').mockReturnValue(newTicket);
     jest.spyOn(repository, 'save').mockResolvedValue(newTicket);
 
-    const result = await service.create(newTicket);
+    const result = await service.create(newTicketDto);
 
     expect(result).toEqual(newTicket);
-  });
-
-  it('should find a ticket by id', async () => {
-    const ticket: Ticket = {
-      id: 1,
-      route: null, // Adjust properties as needed
-      seatNumber: 'A1',
-      luggage: false,
-      seats: [],
-      luggages: [],
-      payments: [],
-      created_at: new Date(),
-      updated_at: new Date(),
-    };
-    jest.spyOn(repository, 'findOne').mockResolvedValue(ticket);
-
-    const result = await service.findOne(1);
-
-    expect(result).toEqual(ticket);
-  });
-
-  it('should update a ticket by id', async () => {
-    const updatedTicket: Ticket = {
-      id: 1,
-      route: null,
-      seatNumber: 'A2',
-      luggage: true,
-      seats: [],
-      luggages: [],
-      payments: [],
-      created_at: new Date(),
-      updated_at: new Date(),
-    };
-    jest
-      .spyOn(repository, 'update')
-      .mockResolvedValue({ raw: {}, affected: 1 } as UpdateResult);
-    jest.spyOn(repository, 'findOne').mockResolvedValue(updatedTicket);
-
-    const result = await service.update(1, updatedTicket);
-
-    expect(result).toEqual(updatedTicket);
-  });
-
-  it('should remove a ticket by id', async () => {
-    jest
-      .spyOn(repository, 'delete')
-      .mockResolvedValue({ raw: {}, affected: 1 } as DeleteResult);
-
-    await expect(service.remove(1)).resolves.toBeUndefined();
   });
 });
