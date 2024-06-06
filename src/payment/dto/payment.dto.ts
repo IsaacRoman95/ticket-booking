@@ -1,13 +1,15 @@
+import { Type } from 'class-transformer';
 import { IsDecimal, IsDate, IsNumber, IsOptional } from 'class-validator';
 
 export class CreatePaymentDto {
   @IsNumber()
   ticketId: number;
 
-  @IsDecimal()
+  @IsDecimal({ decimal_digits: '2' })
   amount: number;
 
   @IsDate()
+  @Type(() => Date)
   paymentDate: Date;
 }
 

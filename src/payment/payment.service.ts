@@ -1,14 +1,17 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Body, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Payment } from '../entities/payment.entity';
 import { CreatePaymentDto, UpdatePaymentDto } from './dto/payment.dto';
+import { Ticket } from 'src/entities/ticket.entity';
 
 @Injectable()
 export class PaymentService {
   constructor(
     @InjectRepository(Payment)
     private paymentRepository: Repository<Payment>,
+    @InjectRepository(Ticket)
+    private ticketRepository: Repository<Ticket>,
   ) {}
 
   findAll(): Promise<Payment[]> {
@@ -24,7 +27,18 @@ export class PaymentService {
   }
 
   async create(createPaymentDto: CreatePaymentDto): Promise<Payment> {
-    const payment = this.paymentRepository.create(createPaymentDto);
+    const ticket = await this.ticketRepository.findOne({
+      where: { id: createPaymentDto.ticketId },
+    });
+    if (!ticket) {
+      throw new NotFoundException('Ticket not found');
+    }
+
+    const payment = this.paymentRepository.create({
+      ...createPaymentDto,
+      ticket,
+    });
+
     return this.paymentRepository.save(payment);
   }
 
@@ -41,6 +55,9 @@ export class PaymentService {
   }
 
   async remove(id: number): Promise<void> {
-    await this.paymentRepository.delete(id);
+    const result = await this.paymentRepository.delete(id);
+    if (result.affected === 0) {
+      throw new NotFoundException('Payment not found');
+    }
   }
 }
