@@ -1,3 +1,4 @@
+import { Type } from 'class-transformer';
 import { IsString, IsDate, IsOptional } from 'class-validator';
 
 export class CreateRouteDto {
@@ -8,6 +9,7 @@ export class CreateRouteDto {
   destination: string;
 
   @IsDate()
+  @Type(() => Date)
   travelDate: Date;
 }
 
@@ -22,5 +24,6 @@ export class UpdateRouteDto {
 
   @IsOptional()
   @IsDate()
+  @Type(() => Date)
   travelDate?: Date;
 }

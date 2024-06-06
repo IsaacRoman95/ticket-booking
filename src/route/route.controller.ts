@@ -12,6 +12,7 @@ import {
 import { RouteService } from './route.service';
 import { Route } from '../entities/route.entity';
 import { JsonApiInterceptor } from 'src/interceptors/json-api.interceptor';
+import { CreateRouteDto, UpdateRouteDto } from './dto/route.dto';
 
 @Controller('route')
 @UseInterceptors(
@@ -40,12 +41,12 @@ export class RouteController {
   }
 
   @Post()
-  create(@Body() createRouteDto: Route) {
+  create(@Body() createRouteDto: CreateRouteDto): Promise<Route> {
     return this.routeService.create(createRouteDto);
   }
 
   @Put(':id')
-  update(@Param('id') id: string, @Body() updateRouteDto: Route) {
+  update(@Param('id') id: number, @Body() updateRouteDto: UpdateRouteDto): Promise<Route> {
     return this.routeService.update(+id, updateRouteDto);
   }
 

@@ -35,11 +35,6 @@ export class PaymentController {
     return this.paymentService.findOne(id);
   }
 
-  // @Post()
-  // @HttpCode(HttpStatus.CREATED)
-  // async create(@Body() createPaymentDto: CreatePaymentDto) {
-  //   return this.paymentService.create(createPaymentDto);
-  // }
   @Post()
   create(@Body() createPaymentDto: CreatePaymentDto): Promise<Payment> {
     return this.paymentService.create(createPaymentDto);
